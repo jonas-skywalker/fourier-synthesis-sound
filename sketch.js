@@ -80,6 +80,8 @@ function draw() {
   text("Adjust a1(red) ↴", 150, height - 30);
   text("Adjust a2(green) ↴", 150 + inputa1.width, height - 30);
   text("Adjust a3(blue) ↴", 150 + inputa1.width * 2, height - 30);
+  text("Change the Mode ↴", 700, height - 30);
+
 
   if (inputa1.value() && inputa2.value() && inputa3.value()) {
     draw_data(event_select.value());
