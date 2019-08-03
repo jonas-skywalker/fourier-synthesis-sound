@@ -61,9 +61,11 @@ function setup() {
   event_select.option("Brass");
   event_select.option("Wurlitzer");
   event_select.option("Pulse");
-
-
   event_select.changed(change_mode);
+
+  songbutton = createButton('Song');
+  songbutton.position(event_select.x + event_select.width + 180, frequency_slider.y);
+  songbutton.mousePressed(play_song);
 }
 
 function draw() {
@@ -81,7 +83,7 @@ function draw() {
   text("Adjust a2(green) ↴", 150 + inputa1.width, height - 30);
   text("Adjust a3(blue) ↴", 150 + inputa1.width * 2, height - 30);
   text("Change the Mode ↴", 700, height - 30);
-
+  text("Play a little Song ↴", 850, height - 30);
 
   if (inputa1.value() && inputa2.value() && inputa3.value()) {
     draw_data(event_select.value());
@@ -90,7 +92,7 @@ function draw() {
   draw_grid(event_select.value());
 }
 
-function playFourierSynth() {
+function playFourierSynth(freq=frequency_slider.value(), stop=0.5) {
   var ac = new AudioContext();
   var osc = ac.createOscillator();
 
@@ -104,13 +106,13 @@ function playFourierSynth() {
   var wave = ac.createPeriodicWave(real, imag, {disableNormalization: true});
 
   osc.setPeriodicWave(wave);
-  osc.frequency.value = frequency_slider.value();
+  osc.frequency.value = freq;
   osc.connect(ac.destination);
   osc.start();
-  osc.stop(0.5);
+  osc.stop(stop);
 }
 
-function playFourierSynthInstrument(inst) {
+function playFourierSynthInstrument(inst, freq=frequency_slider.value(), stop=0.5) {
   var ac = new AudioContext();
   var osc = ac.createOscillator();
 
@@ -126,10 +128,10 @@ function playFourierSynthInstrument(inst) {
   var wave = ac.createPeriodicWave(real, imag, {disableNormalization: true});
 
   osc.setPeriodicWave(wave);
-  osc.frequency.value = frequency_slider.value();
+  osc.frequency.value = freq;
   osc.connect(ac.destination);
   osc.start();
-  osc.stop(0.5);
+  osc.stop(stop);
 }
 
 function change_mode() {
@@ -319,31 +321,7 @@ function draw_wave2048(om) {
   translate(50, height/2);
   //get the instrument
   // why does this not work : var inst = window[event_select.value()]; make this global variable
-  if (event_select.value() == "Organ") {
-    var inst = Organ;
-  } else if (event_select.value() == "Trombone") {
-    var inst = Trombone;
-  } else if (event_select.value() == "Brass") {
-    var inst = Brass;
-  } else if (event_select.value() == "Piano") {
-    var inst = Piano;
-  } else if (event_select.value() == "Saw") {
-    var inst = Saw;
-  } else if (event_select.value() == "Square") {
-    var inst = Square;
-  } else if (event_select.value() == "Triangle") {
-    var inst = Triangle;
-  } else if (event_select.value() == "ChorusStrings") {
-    var inst = ChorusStrings;
-  } else if (event_select.value() == "Bass") {
-    var inst = Bass;
-  } else if (event_select.value() == "Noise") {
-    var inst = Noise;
-  } else if (event_select.value() == "Pulse") {
-    var inst = Pulse;
-  } else if (event_select.value() == "Wurlitzer") {
-    var inst = Wurlitzer;
-  }
+  var inst = get_inst();
   //calculate the points
   for (var x = 0; x < width - 50; x++) {
     var y = 0;
@@ -385,4 +363,84 @@ function minimum(list) {
     }
   }
   return min;
+}
+
+function play_song() {
+  // this is just for fun
+  if (event_select.value() == "Interactive") {
+    playFourierSynth(440, 0.5);
+    sleep(500);
+    playFourierSynth(430, 0.5);
+    sleep(500);
+    playFourierSynth(420, 0.5);
+    sleep(500);
+    playFourierSynth(410, 0.5);
+    sleep(500);
+    playFourierSynth(400, 0.5);
+    sleep(500);
+    playFourierSynth(390, 0.5);
+    sleep(500);
+    playFourierSynth(380, 0.5);
+    sleep(500);
+    playFourierSynth(370, 0.5);
+    sleep(500);
+    playFourierSynth(360, 0.5);
+  } else {
+    var inst = get_inst();
+    playFourierSynthInstrument(inst, 440, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 430, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 420, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 410, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 400, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 390, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 380, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 370, 0.5);
+    sleep(500);
+    playFourierSynthInstrument(inst, 360, 0.5);
+  }
+}
+
+function get_inst() {
+  if (event_select.value() == "Organ") {
+    var inst = Organ;
+  } else if (event_select.value() == "Trombone") {
+    var inst = Trombone;
+  } else if (event_select.value() == "Brass") {
+    var inst = Brass;
+  } else if (event_select.value() == "Piano") {
+    var inst = Piano;
+  } else if (event_select.value() == "Saw") {
+    var inst = Saw;
+  } else if (event_select.value() == "Square") {
+    var inst = Square;
+  } else if (event_select.value() == "Triangle") {
+    var inst = Triangle;
+  } else if (event_select.value() == "ChorusStrings") {
+    var inst = ChorusStrings;
+  } else if (event_select.value() == "Bass") {
+    var inst = Bass;
+  } else if (event_select.value() == "Noise") {
+    var inst = Noise;
+  } else if (event_select.value() == "Pulse") {
+    var inst = Pulse;
+  } else if (event_select.value() == "Wurlitzer") {
+    var inst = Wurlitzer;
+  }
+  return inst;
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
