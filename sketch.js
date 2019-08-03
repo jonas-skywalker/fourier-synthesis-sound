@@ -59,6 +59,9 @@ function setup() {
   event_select.option("Square");
   event_select.option("ChorusStrings");
   event_select.option("Brass");
+  event_select.option("Wurlitzer");
+  event_select.option("Pulse");
+
 
   event_select.changed(change_mode);
 }
@@ -154,6 +157,10 @@ function change_mode() {
       playbutton.mousePressed(function() { playFourierSynthInstrument(Bass);});
     } else if (event_select.value() == "Noise") {
       playbutton.mousePressed(function() { playFourierSynthInstrument(Noise);});
+    } else if (event_select.value() == "Pulse") {
+      playbutton.mousePressed(function() { playFourierSynthInstrument(Pulse);});
+    } else if (event_select.value() == "Wurlitzer") {
+      playbutton.mousePressed(function() { playFourierSynthInstrument(Wurlitzer);});
     }
   }
 }
@@ -330,6 +337,10 @@ function draw_wave2048(om) {
     var inst = Bass;
   } else if (event_select.value() == "Noise") {
     var inst = Noise;
+  } else if (event_select.value() == "Pulse") {
+    var inst = Pulse;
+  } else if (event_select.value() == "Wurlitzer") {
+    var inst = Wurlitzer;
   }
   //calculate the points
   for (var x = 0; x < width - 50; x++) {
